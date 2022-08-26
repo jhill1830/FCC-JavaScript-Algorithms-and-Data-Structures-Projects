@@ -78,18 +78,25 @@ if cid total > change &
 */
 
 function checkCashRegister(price, cash, cid) {
+  let cidTotal = 0;
   let cidMult = [];
-  cidMult["PENNY"] = cid[0][1]/1*100
-  cidMult["NICKEL"] = cid[1][1]/5*100
-  cidMult["DIME"] = cid[2][1]/10*100
-  cidMult["QUARTER"] = cid[3][1]/25*100
-  cidMult["ONE"] = cid[4][1]
-  cidMult["FIVE"] = cid[5][1]/5
-  cidMult["TEN"] = cid[6][1]/10
-  cidMult["TWENTY"] = cid[7][1]/20
-  cidMult["ONE HUNDRED"] = cid[8][1]/100
+  cidMult["PENNY"] = [cid[0][1]/1*100, 0.01];
+  cidMult["NICKEL"] = [cid[1][1]/5*100, 0.05];
+  cidMult["DIME"] = [cid[2][1]/10*100, 0.10];
+  cidMult["QUARTER"] = [cid[3][1]/25*100, 0.25];
+  cidMult["ONE"] = [cid[4][1], 1];
+  cidMult["FIVE"] = [cid[5][1]/5, 5];
+  cidMult["TEN"] = [cid[6][1]/10, 10];
+  cidMult["TWENTY"] = [cid[7][1]/20, 20];
+  cidMult["ONE HUNDRED"] = [cid[8][1]/100, 100];
 
-  console.log(cidMult)
+  for (let i = 0; i < cid.length; i++){
+    cidTotal += cid[i][1]*100
+  }
+  cidTotal = cidTotal/100;
+
+  console.log(cidTotal);
+  console.log(cidMult);
   let change;
   return change;
 }
