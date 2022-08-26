@@ -26,12 +26,12 @@ One-hundred Dollars	$100 (ONE HUNDRED)
 
 
 See below for an example of a cash-in-drawer array:
-
+ 
 [
-  ["PENNY", 1.01],
-  ["NICKEL", 2.05],
-  ["DIME", 3.1],
-  ["QUARTER", 4.25],
+  ["PENNY", 1.01],    - 1 cent
+  ["NICKEL", 2.05],   - 5 cents
+  ["DIME", 3.1],      - 10 cents
+  ["QUARTER", 4.25],  - 25 cents
   ["ONE", 90],
   ["FIVE", 55],
   ["TEN", 20],
@@ -39,11 +39,59 @@ See below for an example of a cash-in-drawer array:
   ["ONE HUNDRED", 100]
 ]
 
+checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]) should 
+return an object.
+
+checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]) should 
+return {status: "OPEN", change: [["QUARTER", 0.5]]}.
+
+checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]) should 
+return {status: "OPEN", change: [["TWENTY", 60], ["TEN", 20], ["FIVE", 15], ["ONE", 1], ["QUARTER", 0.5], ["DIME", 0.2], ["PENNY", 0.04]]}.
+
+checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]) should 
+return {status: "INSUFFICIENT_FUNDS", change: []}.
+
+checkCashRegister(19.5, 20, [["PENNY", 0.01], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 1], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]) should 
+return {status: "INSUFFICIENT_FUNDS", change: []}.
+
+checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]) should 
+return {status: "CLOSED", change: [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]]}.
+
+
+
+Steps:
+convert cid to total money
+create change variable(cash-price)
+
+if cid total < change - return insufficient
+if cid total === change - return closed
+if cid total > change &
+  convert cid to multiples of bill value(new array?)
+  iterate through cid multiples array as the total values and subtract from change from largest to smallest bills.
+  convert change to the multiple of cid bill value through iteration
+  remove that from the change over each iteration
+  If change != 0 return insufficient
+
+
+
+
 */
 
 function checkCashRegister(price, cash, cid) {
-    let change;
-    return change;
-  }
-  
-  checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
+  let cidMult = [];
+  cidMult["PENNY"] = cid[0][1]/1*100
+  cidMult["NICKEL"] = cid[1][1]/5*100
+  cidMult["DIME"] = cid[2][1]/10*100
+  cidMult["QUARTER"] = cid[3][1]/25*100
+  cidMult["ONE"] = cid[4][1]
+  cidMult["FIVE"] = cid[5][1]/5
+  cidMult["TEN"] = cid[6][1]/10
+  cidMult["TWENTY"] = cid[7][1]/20
+  cidMult["ONE HUNDRED"] = cid[8][1]/100
+
+  console.log(cidMult)
+  let change;
+  return change;
+}
+
+checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
