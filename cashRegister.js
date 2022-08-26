@@ -73,9 +73,6 @@ if cid total > change &
   remove that from the change over each iteration
   If change != 0 return insufficient
 
-
-
-
 */
 
 function checkCashRegister(price, cash, cid) {
@@ -94,9 +91,8 @@ function checkCashRegister(price, cash, cid) {
   cidMult["ONE HUNDRED"] = [cid[8][1]/100, 100];
 
   let statChange = {"status": "", "change": []};
-  console.log(statChange)
 
-console.log(cidMult[cid[1][0]])
+  //console.log(cidMult[cid[0][0]][1])
 
   for (let i = 0; i < cid.length; i++){
     cidTotal += cid[i][1]*100
@@ -116,10 +112,37 @@ console.log(cidMult[cid[1][0]])
     return statChange;
   };
 
+  function findChange() {
+    for (let j = cid.length - 1; j >= 0; j--){
+      if (change >= cidMult[cid[j][0]][1] && cidMult[cid[j][0]][0] > 0) {
+        //console.log(cid[j])
+        change = change - cidMult[cid[j][0]][1]
+        cidMult[cid[j][0]][0] -= 1
+        console.log(change.toFixed(2))
+        
+        if (change.toFixed(2) < 0) {
+          statChange["status"] = "INSUFFICIENT_FUNDS";
+          statChange["change"] = [];
+          console.log(statChange)
+          return statChange;
+        }
+
+        if (change.toFixed(2) != 0) {
+          findChange()
+        }
+        console.log(change.toFixed(2))
+      }
+    }
+  }
+
+
+  findChange()
+  console.log(statChange)
   console.log(cidTotal);
   console.log(cidMult);
-  
-  return change;
+  console.log(cid.length);
+
+  return statChange;
 }
 
-checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]])
+checkCashRegister(19.5, 20.5, [["PENNY", 0.5], ["NICKEL", 1], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]])
