@@ -64,8 +64,8 @@ convert cid to total money
 create change variable(cash-price)
 create status/change variable
 
-if cid total < change - return insufficient
-if cid total === change - return closed
+if cid total < change - return insufficient   DONE
+if cid total === change - return closed       DONE
 if cid total > change &
   convert cid to multiples of bill value(new array?)
   iterate through cid multiples array as the total values and subtract from change from largest to smallest bills.
@@ -112,37 +112,48 @@ function checkCashRegister(price, cash, cid) {
     return statChange;
   };
 
-  function findChange() {
-    for (let j = cid.length - 1; j >= 0; j--){
-      if (change >= cidMult[cid[j][0]][1] && cidMult[cid[j][0]][0] > 0) {
-        //console.log(cid[j])
-        change = change - cidMult[cid[j][0]][1]
-        cidMult[cid[j][0]][0] -= 1
-        console.log(change.toFixed(2))
-        
-        if (change.toFixed(2) < 0) {
-          statChange["status"] = "INSUFFICIENT_FUNDS";
-          statChange["change"] = [];
-          console.log(statChange)
-          return statChange;
-        }
+  let changeInt = Math.round(change*100); //make the numbers integers to prevent float point errors
+  let countChange = [["PENNY", 0],["NICKEL", 0],["DIME", 0],["QUARTER",0],['ONE',0],["FIVE",0],["TEN",0],["TWENTY",0],["ONE HUNDRED",0]];
 
-        if (change.toFixed(2) != 0) {
-          findChange()
+  function findChange(){
+    //console.log(changeInt)
+    for (let i = cid.length - 1; i >= 0; i--) { //iterate descendingly through cid to compare largest to smallest bills
+      if (cidMult[cid[i][0]][0] > 0 && changeInt >= Math.round(cidMult[cid[i][0]][1]*100)) {    //if there is money in till of that type and that it is less than or equal to the change
+        console.log(i)
+        //console.log(Math.round(cidMult[cid[i][0]][1]*100));
+        //console.log(i)
+        changeInt -= Math.round(cidMult[cid[i][0]][1]*100);       //negates bill value from total change
+        //console.log(changeInt);
+        cidMult[cid[i][0]][0] -= 1;                               //removes bill from till
+        countChange[i][1] += cidMult[cid[i][0]][1]                //adds bill to change counter
+        console.log(countChange)
+        if (changeInt != 0) {
+          statChange["change"].push(countChange[i])
+          findChange();
+          //console.log(countChange)
+          if (changeInt == 0){
+            statChange["status"] = "OPEN";
+          }
         }
-        console.log(change.toFixed(2))
       }
     }
   }
 
-
   findChange()
+
+  //filter out duplicates in statChange["change"]
+  let filterChange = statChange["change"].filter((value, index) => {
+    return statChange["change"].indexOf(value) ===index;
+  })
+  statChange["change"] = filterChange
+
+  console.log(filterChange)
   console.log(statChange)
   console.log(cidTotal);
   console.log(cidMult);
   console.log(cid.length);
-
+  
   return statChange;
 }
 
-checkCashRegister(19.5, 20.5, [["PENNY", 0.5], ["NICKEL", 1], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]])
+checkCashRegister(3.26, 100, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]])
