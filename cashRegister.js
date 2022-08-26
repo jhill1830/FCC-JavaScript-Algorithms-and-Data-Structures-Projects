@@ -62,6 +62,7 @@ return {status: "CLOSED", change: [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], [
 Steps:
 convert cid to total money
 create change variable(cash-price)
+create status/change variable
 
 if cid total < change - return insufficient
 if cid total === change - return closed
@@ -78,6 +79,8 @@ if cid total > change &
 */
 
 function checkCashRegister(price, cash, cid) {
+  let change = cash-price;
+  console.log(change)
   let cidTotal = 0;
   let cidMult = [];
   cidMult["PENNY"] = [cid[0][1]/1*100, 0.01];
@@ -90,15 +93,28 @@ function checkCashRegister(price, cash, cid) {
   cidMult["TWENTY"] = [cid[7][1]/20, 20];
   cidMult["ONE HUNDRED"] = [cid[8][1]/100, 100];
 
+  let statChange = {"status": "", "change": []};
+  console.log(statChange)
+
+console.log(cidMult[cid[1][0]])
+
   for (let i = 0; i < cid.length; i++){
     cidTotal += cid[i][1]*100
   }
   cidTotal = cidTotal/100;
 
+  if (change > cidTotal) {
+    statChange["status"] = "INSUFFICIENT_FUNDS"
+    console.log(statChange)
+    return statChange;
+  };
+
+
   console.log(cidTotal);
   console.log(cidMult);
-  let change;
+  
+  
   return change;
 }
 
-checkCashRegister(19.5, 20, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
+checkCashRegister(19.5, 2000, [["PENNY", 1.01], ["NICKEL", 2.05], ["DIME", 3.1], ["QUARTER", 4.25], ["ONE", 90], ["FIVE", 55], ["TEN", 20], ["TWENTY", 60], ["ONE HUNDRED", 100]]);
