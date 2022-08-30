@@ -46,6 +46,19 @@ telephoneCheck("11 555-555-5555") should return false.
 
 Steps
 
+check for country code
+    check if country code == 1; true
+check for letters that aren't approved symbols eg. - () spaces
+    false if unapproved letters/symbols
+Remove non-digits from input eg. - () spaces
+if input doesn't have both opening and closing brackets; return false
+    counter for opening and counter for closing brackets.
+    remainder those counters. then sum the remainder results
+        if !=1; return false
+
+if input starts with bracket; return false
+
+
 
 
 
@@ -77,7 +90,54 @@ telephoneCheck("(6054756961)");
 */
 
 function telephoneCheck(str) {
-    return true;
-  }
-  
-  telephoneCheck("555-555-5555");
+    let alphabRegex = /[A-Za-z?]/gi;
+    let obCount = 0;
+    let cbCount = 0;
+    let dashCount = 0;
+
+    //iterate through str looking for brackets and dashes
+    for (let i = 0; i < str.length; i++) {
+        if (str[i] == "(") {
+            obCount += 1
+            console.log(obCount)
+        }
+        if (str[i] == ")") {
+            cbCount += 1
+            console.log(cbCount)
+        }
+        if (str[i] == "-") {
+            dashCount += 1
+            console.log(dashCount)
+        }
+    }
+
+    if (obCount !== cbCount) {
+        return false;
+    }
+    if (dashCount > 2) {
+        return false;
+    }
+
+    if (str.charAt(0) == "(" && str.charAt(str.length-1) == ")") {      
+        console.log('false');
+        return false;
+    }
+
+	if (alphabRegex.test(str) || str.charAt(0) == '-') {					//  if str has letters -> return false
+		console.log('false');
+		return false;
+	};
+    
+	let regex = /\D/g;            					// Use regex to remove non-numerals
+	let newStr = str.replace(regex, '');
+
+	if (newStr.length == 10 || (newStr.length == 11 && newStr.charAt(0) == 1)) {				//  if str.length(after removal of non-numbers) != 10 OR != 11 and doesn't start with 1 -> return false
+		console.log('true', "Number:", newStr, "Length:", newStr.length)
+		return true;
+	}
+    
+	console.log(false, "Number:", newStr, "Length:", newStr.length)
+	return false
+}
+
+telephoneCheck("55 55-55-555-5");
